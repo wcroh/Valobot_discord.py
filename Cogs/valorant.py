@@ -59,11 +59,9 @@ class ValoCog(commands.Cog, name = 'Valorant'):
         await interaction.response.defer(ephemeral=False)
         
         if user_id in self.db.keys():
-            print('db 통과')
             id = self.db[user_id]['id']
             pw = self.db[user_id]['pw']
             user_data = await self.auth.temp_auth(id,pw)
-            print('인증 통과')
             await setup_emoji(self.bot, interaction.guild)
             
             endpoint = await self.get_endpoint(user_data)
