@@ -37,20 +37,19 @@ class ValoCog(commands.Cog, name = 'Valorant'):
     @app_commands.describe(id='아이디를 입력하세요', pw = '패스워드를 입력하세요')
     async def login(self, interaction:Interaction, id:str, pw:str) -> None:
         user_id = interaction.user.id
-        try:
-            authenticate = await self.auth.authenticate(username=id, password=pw)
-            print('pass authenticate')
-            if authenticate['auth'] == 'response':
-                self.db[user_id] = {'id':id,'pw':pw}
-                print('saved db')
-                access_token = authenticate['data']['access_token']
-                puuid, name, tag = await self.auth.get_userinfo(access_token)
-                return await interaction.response.send_message(content=f'{name}#{tag}로 로그인 성공!')
-            else:
-                return await interaction.response.send_message(content=f'로그인 오류, 다시 로그인해주세요!(/로그인)')
-        except:
-            return await interaction.response.send_message(content=f'로그인 오류, 다시 로그인해주세요!(/로그인 명령어)\n ！계속 오류가 난다면, 라이엇 홈페이지에서 로그인해보고 다시 시도하세요.')
-        
+
+        authenticate = await self.auth.authenticate(username=id, password=pw)
+        print('pass authenticate')
+        if authenticate['auth'] == 'response':
+            await interaction.response.defer(ephemeral=True)
+            self.db[user_id] = {'id':id,'pw':pw}
+            print('saved db')
+            access_token = authenticate['data']['access_token']
+            puuid, name, tag = await self.auth.get_userinfo(access_token)
+            print('user info 성공')
+            return await interaction.followup.send(content=f'{name}#{tag}로 로그인 성공!', ephemeral=True)
+        else:
+            return await interaction.response.send_message(content=f'로그인 오류, 다시 로그인해주세요!(/로그인)')
         
         
     @app_commands.command(name='스킨', description='상점에서 스킨을 받아옵니다.')
@@ -82,6 +81,5 @@ class ValoCog(commands.Cog, name = 'Valorant'):
         endpoint.activate(user_data)
         return endpoint
         
-
 async def setup(bot: ValoBot) -> None:
     await bot.add_cog(ValoCog(bot))
