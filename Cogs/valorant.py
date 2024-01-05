@@ -15,6 +15,9 @@ from utils.auth import Auth
 from utils.resources import setup_emoji
 from utils.cache import fetch_price
 
+if TYPE_CHECKING:
+    from bot import ValorantBot
+
 class ValoCog(commands.Cog, name = 'Valorant'):
     """Valorant API Commands"""
     
@@ -31,7 +34,20 @@ class ValoCog(commands.Cog, name = 'Valorant'):
     
     @app_commands.command(name='우진')
     async def woojin(self, interaction: Interaction) -> None:
-        await interaction.response.send_message('우진이 수능 고생했다!🥳🥳🥳🥳🥳')
+        woojin_id = 1002033065205432430
+        if interaction.user.id == 1002033065205432430:
+            await interaction.response.send_message('우진님이 지금 발로란트를 같이 할 사람을 찾고 있어요!'
+            )
+        elif interaction.user.id == 353551869471096835:
+            await interaction.response.send_message(f'<@{woojin_id}> 우진아 발로하자!'
+            )
+        else: await interaction.response.send_message('우진이 수능 고생했다!🥳🥳🥳🥳🥳')
+        
+    @app_commands.command(name='유경')
+    async def yuki(self, interaction: Interaction) -> None:
+        if interaction.user.id == 1136338502930415727:
+            await interaction.response.send_message('나는 너무 예뻐 이렇게 태어나준 내 자신에게 고마워!!🥳🥳🥳🥳🥳')
+        else :await interaction.response.send_message('유경이 생일 축하해!!🥳🥳🥳🥳🥳')
     
     @app_commands.command(name='로그인', description='라이엇 계정으로 로그인')
     @app_commands.describe(id='아이디를 입력하세요', pw = '패스워드를 입력하세요')
